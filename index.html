@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <h1 class="text-5xl my-10 text-center">Todo List</h1>
+    <div class="w-1/2 mx-auto text-center">
+        <form id="todo-form">
+            <div class="border flex">
+                <input type="text" placeholder="Bir şeyler yazın.." class="w-full p-3" id="todos">
+                <button type="submit" class="border-l px-6 bg-green-500 text-white" id="add-todo">Ekle</button>
+            </div>
+        </form>
+        <div class="flex justify-end my-5">
+            <button class="px-3 bg-red-500 text-white" id="clear-todos">Temizle</button>
+        </div>
+        <ul class="border p-6 flex-col gap-y-4" id="todos2"></ul>
+    </div>
+    <script>
+        const textInputDOM = document.getElementById("todos");
+        const btnaddTodoDOM = document.getElementById("add-todo");
+        const clearTodosDOM = document.getElementById("clear-todos");
+        const todos2DOM = document.getElementById("todos2");
+
+        let textInputValue = "";
+        let todos = [];
+
+        textInputDOM.addEventListener("input", function(event) {
+            textInputValue = event.target.value;
+            console.log(event.target.value);
+        });
+
+        document.getElementById("todo-form").addEventListener("submit", addTodo);
+
+        function addTodo(e) {
+            e.preventDefault();
+            if (textInputValue.trim() !== "") {
+                todos.push({ id: todos.length + 1, todoTitle: textInputValue });
+                textInputValue = "";
+                textInputDOM.value = "";
+                displayTodos();
+            }
+        }
+
+        function displayTodos() {
+            let result = "";
+            todos.forEach((item) => {
+                result += `
+                    <li class="flex justify-between border px-4 py-3 items-center">
+                        <span>${item.todoTitle}</span>
+                        <button class="text-red-400" onclick="deleteTodo(${item.id})">Sil</button>
+                    </li>
+                `;
+            });
+            todos2DOM.innerHTML = result;
+        }
+
+        function deleteTodo(id) {
+            todos = todos.filter((todo) => todo.id !== id);
+            displayTodos();
+        }
+
+        clearTodosDOM.addEventListener("click", function() {
+            todos = [];
+            displayTodos();
+        });
+    </script>
+</body>
+</html>
